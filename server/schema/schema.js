@@ -58,6 +58,14 @@ const mutation=new GraphQLObjectType({
                 })
                 return newEvent.save()
             }
+        },
+        //Delete event
+        deleteEvent:{
+            type:EventType,
+            args:{id:{type:GraphQLID}},
+            resolve(parent,args){
+                return Event.findByIdAndDelete(args.id)
+            }
         }
     }
 })
