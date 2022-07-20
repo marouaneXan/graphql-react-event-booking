@@ -17,3 +17,17 @@ const EventType=new GraphQLObjectType({
         name:{type:GraphQLString}
     })
 })
+
+//create RootQuery
+const RootQuery=new GraphQLObjectType({
+    name:RootQuery,
+    fields:{
+        //Get all events
+        events:{
+            type:GraphQLList(EventType),
+            resolve(parent,args){
+                return ["Romantic coocking", "Sailing", "All night Coding"]
+            }
+        }
+    }
+})
