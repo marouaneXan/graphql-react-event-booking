@@ -28,6 +28,14 @@ const RootQuery=new GraphQLObjectType({
             resolve(parent,args){
                 return ["Romantic coocking", "Sailing", "All night Coding"]
             }
+        },
+        //Get event by id
+        event:{
+            type:EventType,
+            args:{id:{type:GraphQLID}},
+            resolve(parent,args){
+                return Event.findById(args.id)
+            }
         }
     }
 })
