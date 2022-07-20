@@ -41,38 +41,54 @@ const RootQuery = new GraphQLObjectType({
   },
 });
 
-
 //Create mutation
-const mutation=new GraphQLObjectType({
-    name:"mutation",
-    fields:{
-        //Create event
-        addEvent:{
-            type:EventType,
-            args:{
-                name:{type:GraphQLNonNull(GraphQLString)}
+const mutation = new GraphQLObjectType({
+  name: "mutation",
+  fields: {
+    //Create event
+    addEvent: {
+      type: EventType,
+      args: {
+        name: { type: GraphQLNonNull(GraphQLString) },
+      },
+      resolve(parent, args) {
+        const newEvent = new Event({
+          name: args.name,
+        });
+        return newEvent.save();
+      },
+    },
+    //Delete event
+    deleteEvent: {
+      type: EventType,
+      args: { id: { type: GraphQLID } },
+      resolve(parent, args) {
+        return Event.findByIdAndDelete(args.id);
+      },
+    },
+    //Update event
+    updateEvent: {
+      type: EventType,
+      args: {
+        id: { type: GraphQLID },
+        name: { type: GraphQLNonNull(GraphQLString) },
+      },
+      resolve(parent, args) {
+        return Event.findByIdAndUpdate(
+          args.id,
+          {
+            $set: {
+              name: args.name,
             },
-            resolve(parent,args){
-                const newEvent=new Event({
-                    name:args.name,
-                })
-                return newEvent.save()
-            }
-        },
-        //Delete event
-        deleteEvent:{
-            type:EventType,
-            args:{id:{type:GraphQLID}},
-            resolve(parent,args){
-                return Event.findByIdAndDelete(args.id)
-            }
-        }
-    }
-})
-
-
+          },
+          { new: true }
+        );
+      },
+    },
+  },
+});
 
 module.exports = new GraphQLSchema({
-    query: RootQuery,
-    mutation,
-  });
+  query: RootQuery,
+  mutation,
+});
